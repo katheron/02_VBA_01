@@ -1,0 +1,66 @@
+Sub WallStreet()
+
+Dim ws As Worksheet
+    For Each ws In Worksheets
+    
+        ws.Cells(1, 9).Value = "Ticker"
+            Dim ticker As String
+            Dim hold As Long
+            hold = 2
+            Dim lastrow As Long
+            lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        ws.Cells(1, 10).Value = "Yearly Change"
+            Dim open_value As Double
+            open_value = 0
+            Dim close_value As Double
+            close_value = 0
+            Dim yearly_change As Double
+            yearly_change = 0
+        ws.Cells(1, 11).Value = "Percent Change"
+            Dim percent_change As Double
+            percent_change = 0
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+            Dim total_volume As Double
+            total_volume = 0
+            
+            
+        For i = 2 To lastrow
+            If ws.Cells(i, 1).Value = ws.Cells(i + 1, 1).Value Then
+            total_volume = total_volume + ws.Cells(i, 7).Value
+            open_value = ws.Cells(i, 3).Value
+            
+            ElseIf ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+            ticker = ws.Cells(i, 1).Value
+            close_value = ws.Cells(i, 6).Value
+            
+            ws.Cells(hold, 9).Value = ticker
+            ws.Cells(hold, 12).Value = total_volume
+            
+            yearly_change = close_value - open_value
+            ws.Cells(hold, 10).Value = yearly_change
+            
+                If close_value = 0 Then
+                percent_change = 0
+                Else
+                percent_change = yearly_change / close_value * 100
+                End If
+            
+            ws.Cells(hold, 11).Value = percent_change
+            
+            total_volume = 0
+            open_value = 0
+            close_value = 0
+            yearly_change = 0
+            percent_change = 0
+            
+            hold = hold + 1
+            
+            End If
+        
+        Next i
+
+        ws.Range("K2:K" & lastrow).NumberFormat = "0.00%"
+             
+    Next ws
+                
+End Sub
